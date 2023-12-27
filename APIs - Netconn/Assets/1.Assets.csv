@@ -1,0 +1,9 @@
+Asset,System,Type,Ip,Dns,Domain,Mac
+vhesx8020,Server,IDRAC,172.26.174.10,vhesx8020.portoseguro.brasil,portoseguro.brasil,-
+vhesx8022,Server,IDRAC,172.26.174.11,vhesx8022.portoseguro.brasil,portoseguro.brasil,-
+vhesx1301,Server,IDRAC,172.16.238.29,vhesx1301.portoseguro.brasil,portoseguro.brasil,-
+vhesx1302,Server,IDRAC,172.16.238.30,vhesx1302.portoseguro.brasil,portoseguro.brasil,-
+vhesx1303,Server,IDRAC,172.16.238.31,vhesx1303.portoseguro.brasil,portoseguro.brasil,-
+vhesx1304,Server,IDRAC,172.16.238.32,vhesx1304.portoseguro.brasil,portoseguro.brasil,-
+vhesx1305,Server,IDRAC,172.16.238.33,vhesx1305.portoseguro.brasil,portoseguro.brasil,-
+vhesx1306,Server,IDRAC,172.16.238.34,vhesx1306.portoseguro.brasil,portoseguro.brasil,-
