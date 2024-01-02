@@ -1,3 +1,3 @@
 # BeyondTrust PasswordSafe
 
-API's para a comunicação com o cofre de senhas da BeyondTrust.
+Desenvolvimento de API's para facilitar a comunicação com o cofre de senhas da BeyondTrust.
