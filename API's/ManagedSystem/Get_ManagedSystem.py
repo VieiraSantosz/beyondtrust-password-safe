@@ -15,22 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-cofreHomolagacao    = '172.26.168.167'
-cofrePorto          = '172.26.6.163'
-
-urlCofre            = f'https://{cofreHomolagacao}/BeyondTrust/api/public/v3'
-workgroupName       = "BeyondTrust Workgroup"
+ipCofre       = '192.168.10.10'
+urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
+workgroupName = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveHomologacao    = 'b457a2c98328488ec7b6ec784ccaf6bd941cf7fd10151ac8751a2068a53ed6ae234dd0429b3c4c5c67ebf5355d2e43a1965adcf441f642d2894687645c77239d'
-chavePorto          = '676a544afc3d2109c405baea3baf642c7fd02a8e4d329f0fcf2b4348eb8290a1028a15b09c65d8605cc001c1e2abbfd9bf843e2f57d4f0d5ae391cc4731dc83b'
-
-userPorto           = 'vieira.porto'
-userHomolagacao     = 'vieira.homolagacao'
-
-headers             = {'Authorization': f'PS-Auth key={chaveHomologacao};' f'runas={userHomolagacao};'}
+chaveApi = 'xxxxx'
+user     = 'user'
+headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
