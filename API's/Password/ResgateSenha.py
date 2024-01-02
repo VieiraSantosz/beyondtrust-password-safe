@@ -13,28 +13,30 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+
 ### Configuração Cofre ###
-cofre           = '192.168.123.146'
-urlCofre        = f'https://{cofre}/BeyondTrust/api/public/v3'
-workgroupName   = "BEYONDTRUST WORKGROUP"
+ipCofre       = '192.168.10.10'
+urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
+workgroupName = "BeyondTrust Workgroup"
+##########################
+
 
 ### Configuração API ###
-chaveApi    = '35059749f67a199d591d72c6a2fd9fab567e578a6a2e16a4e5d8824bce6b031cb0c2257e933fac364ae57f2ed6b6611434ffc25a058d64ef174178b8b6987ad9'
-user        = 'vieira.santos'
-headers     = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chaveApi = 'xxxxx'
+user     = 'user'
+headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
 
-datype      = {'Content-type': 'application/json'}
-proxy       = {'http': None,'https': None}
+datype  = {'Content-type': 'application/json'}
+proxy   = {'http': None,'https': None}
+########################
 
 
 ################# Persistencia de Login #################
-session = requests.session()
-datype = {'Content-type': 'application/json'}
+session             = requests.session()
+session.proxies     = proxy
+session.trust_env   = False
+session.verify      = False
 session.headers.update(headers)
-session.proxies = proxy
-session.trust_env = False
-session.verify = False
-WG = "BeyondTrust Workgroup"
 #########################################################
 
 
