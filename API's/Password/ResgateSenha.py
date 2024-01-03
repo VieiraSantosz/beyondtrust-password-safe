@@ -42,86 +42,76 @@ session.headers.update(headers)
 
 ################# LogIn #################################
 def PostLogIn():
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify=False) 
     
-    infoLogin = json.loads(login.text)
+    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    
+    infoLogin = login.json()
     
     userId      = infoLogin['UserId']
     userName    = infoLogin['UserName']
     name        = infoLogin['Name']
     
-    print("\nLogin Feito com Sucesso! - Código =", login.status_code)
-    print("\nUserId:", userId, "\nUserName:", userName, "\nName:", name)
-    print()
+    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
+    print("\nUserId..:", userId, 
+          "\nUserName:", userName, 
+          "\nName....:", name)
     print()
 #########################################################
 
 
 ################# Managed Account #######################
-def GetManagedAccount(): 
-    managedAccount = session.get(url = f'{urlCofre}/ManagedAccounts', verify=False)
+def RetrivePassword(): 
     
-    infoAccount = ("SystemName, SystemId, AccountName, AccountId\n") 
+    ##### Buscar as informações da conta #####
+    urlmanagedAccount   = urlCofre + f"/ManagedAccounts/{contaID}"
+    managedAccount      = session.get(url = urlmanagedAccount, verify=False)
     
-    with open ("ManagedAccounts.csv", "a+") as file:  
-        file.write(infoAccount)
-        
-        print("Managed Account e System - Código =", managedAccount.status_code)
-        print()
+    infoAccount = managedAccount.json()
     
-    for i in managedAccount.json():
-        sys_name    = i['SystemName'] 
-        sys_id      = i['SystemId']
-        acc_name    = i['AccountName']
-        acc_id      = i['AccountId']
-        
-        print("SystemName:", sys_name, "| SystemId:", sys_id)
-        print("AccountName:", acc_name, "| AccountId:", acc_id)
-        print()
-#########################################################
-
-
-################# Requests #################################
-def PostMakeRequests():
-    requests = urlCofre + '/Requests'
+    ManagedAccountID    = infoAccount['ManagedAccountID']
+    ManagedSystemID     = infoAccount['ManagedSystemID']
+    AccountName         = infoAccount['AccountName']
     
-    print("\nRequests")
-    print()
     
-    id_system = input("Digite o ID do System: ")
-    id_account = input("Digite o ID da Account: ")
-    
+    ##### Realizar o requests da senha #####
     requestsBody = {
-        'AccessType': "View",
-        'SystemID': id_system,
-        'AccountID': id_account,
-        'DurationMinutes': 2,
-        'Reason': "Teste",
+        'AccessType'        : "View",
+        'SystemID'          : ManagedSystemID,
+        'AccountID'         : ManagedAccountID,
+        'DurationMinutes'   : 2,
+        'Reason'            : "Acesso a solicitação de senha via API",
     }
-    
     dataRequest = json.dumps(requestsBody)  
-    reqres = session.post(requests, data=dataRequest, headers=datype)
-    idRequest = reqres.text 
-    print()
-    print("Id do Requests:", idRequest)
+    
+    urlRequest  = urlCofre + '/Requests'
+    requests    = session.post(url = urlRequest, data = dataRequest, headers = datype)
+    
+    requestsID = requests.json()
+    
+    credentialjson = {
+        'type': 'password',
+    }
+    credential_body = json.dumps(credentialjson)
+    
+    urlCredential   = urlCofre + f'/Credentials/{requestsID}'
+    credential      = session.get(url = urlCredential, params = credential_body, verify = False)
+    
+    password = credential.json()
+    
+    print(f"Conta - {AccountName}")
+    print(f"Senha - {password}")
     
     
-    ### Get Credential ###
-    credential = urlCofre + f'/Credentials/{idRequest}'
+    ##### Put Check-in Request #####
+    checkin = urlCofre + f'/Requests/{requestsID}/Checkin'
     
-    getCredential = session.get(credential, verify=False)
-    senha = (getCredential.text)
-    
-    print("Senha -", senha)
-    input("\nTecle ENTER para dar um Check-in Request")
-    
-
-    ### Put Check-in Request ###
-    checkin = urlCofre + f'/Requests/{idRequest}/Checkin'
-    reason = {'Reason': 'Teste de API'}
+    reason = {
+        'Reason': 'Acesso a solicitação de senha via API'
+    }
     dataReason = json.dumps(reason)  
 
-    checkinRequests = session.put(checkin, data=dataReason, headers=datype)
+    session.put(checkin, data = dataReason, headers = datype)
+    
     print("\nCheck-in Resquest feito!")
 #########################################################
 
@@ -130,18 +120,14 @@ def PostMakeRequests():
 def PostLogOff():
     logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify=False)  
 
-    print("\n\nUsuário acabou de sair da sessão! - Código =", logoff.status_code)
+    print("\nUsuário acabou de sair da sessão! - Código =", logoff.status_code)
     print()
 ##########################################################
 
 
 def main():
     PostLogIn()
-    
-    GetManagedAccount()
-    input("Tecle ENTER para continuar\n")
-    
-    PostMakeRequests()
-    
+    RetrivePassword()
     PostLogOff()
+    
 main()
