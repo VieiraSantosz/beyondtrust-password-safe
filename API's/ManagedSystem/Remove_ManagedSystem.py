@@ -61,7 +61,8 @@ def PostLogIn():
 
 ################# Remover Managed System #################################
 def Remove_ManagedSystem_by_ID():
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\ManagedSystem\.ManagedSystem.csv') as csvfile:
+    
+    with open(r'Caminhho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
