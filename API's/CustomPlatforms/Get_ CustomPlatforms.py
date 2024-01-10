@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Puxar informações de todos os Assets ##############################
+################# Puxar informações de todos os Custom Platforms ##############################
 def Get_CustomPlatforms():
     
     urlCustomPlatforms    = urlCofre + '/CustomPlatforms'
