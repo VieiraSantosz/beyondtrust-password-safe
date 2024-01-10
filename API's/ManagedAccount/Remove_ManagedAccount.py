@@ -61,7 +61,8 @@ def PostLogIn():
 
 ################# Remover Managed Account #################################
 def Remove_ManagedAccount_by_ManagedSystemID():
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\ManagedAccount\.SystemID.csv') as csvfile:
+    
+    with open(r'Caminhho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
