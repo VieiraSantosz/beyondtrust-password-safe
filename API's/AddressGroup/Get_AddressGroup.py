@@ -93,7 +93,7 @@ def Get_AddressGroup():
         try:
             nome_adress = row['Value']
             
-            with open ("AddressGroup\.AddressGroup.csv", "a") as file:
+            with open ("Caminhho do arquivo csv", "a") as file:
                 file.write("\n" + nome_adress)
                 
                 print(f"[+] {nome_adress} retirado com sucesso. | Status Code = {address.status_code}")
