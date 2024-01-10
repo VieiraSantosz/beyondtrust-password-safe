@@ -59,10 +59,10 @@ def PostLogIn():
 #########################################################
 
 
-################# Puxar informações de todos os Assets ##############################
+################# Mudar o Id da Custom Platform de algum Managed System ##############################
 def Put_CustomPlatforms():
     
-    systemID = 356
+    systemID = 'id_do_managed_system'
     
     system_json = {
         'HostName'      : 'string',
