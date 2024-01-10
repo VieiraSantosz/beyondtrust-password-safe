@@ -64,19 +64,19 @@ def Add_Assets():
     
     print(f"Adicionar Assets!\n")
     
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\Assets\.Assets.csv') as csvfile:
+    with open(r'Caminhho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
         for row in reader:
             asset_json = {
                 'AssetName'         : row['Asset'],
-                'IPAddress'         : row['Ip']
-                #'DnsName'           : row['Dns'],
-                #'DomainName'        : row['Domain'],
-                #'MacAddress'        : row['Mac'],
-                #'AssetType'         : row['Type'],
-                #'OperatingSystem'   : row['System']
+                'IPAddress'         : row['Ip'],
+                'DnsName'           : row['Dns'],
+                'DomainName'        : row['Domain'],
+                'MacAddress'        : row['Mac'],
+                'AssetType'         : row['Type'],
+                'OperatingSystem'   : row['System']
             }
 
             assetBody = json.dumps(asset_json)
