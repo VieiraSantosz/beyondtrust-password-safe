@@ -59,10 +59,12 @@ def PostLogIn():
 #########################################################
 
 
-################# Managed Account #######################
+################# Retrieve Password #######################
 def RetrivePassword(): 
     
     ##### Buscar as informações da conta #####
+    contaID = 'id_da_conta'
+    
     urlmanagedAccount   = urlCofre + f"/ManagedAccounts/{contaID}"
     managedAccount      = session.get(url = urlmanagedAccount, verify=False)
     
