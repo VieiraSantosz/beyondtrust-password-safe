@@ -62,7 +62,7 @@ def PostLogIn():
 ################# Atualiazr informações de Managed System ##############################
 def Put_ManagedSystem():
     
-    systemID = 356
+    systemID = 'id_do_managed_system'
     
     system_json = {
         'HostName'      : 'string',
