@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Remover Managed Account #################################
+################# Adicionar Managed Account #################################
 def Add_ManagedAccount_by_ManagedSystemID():
     
     print("Adicionar Managed Account\n")
