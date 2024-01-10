@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Puxar informações de todos os Assets ##############################
+################# Puxar informações de todos os Managed System ##############################
 def Get_ManagedSystem():
     
     urlManagedSystem    = urlCofre + '/ManagedSystems'
