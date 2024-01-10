@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Adicionar Máquinas no Address Group #################################
+################# Adicionar Assets no Address Group #################################
 def Add_AddressGroup():
     
     adressGroup = session.get(url = f'{urlCofre}/Addressgroups', verify = False) 
