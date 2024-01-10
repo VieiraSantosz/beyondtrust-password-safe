@@ -83,7 +83,7 @@ def Add_AddressGroup():
     addressGroupId = input("\nDigite o ID do Address Group: ")
     print()
     
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\AddressGroup\.Máquinas.csv') as csvfile:
+    with open(r'Caminhho do arquivo csv') as csvfile:
     
         reader = csv.DictReader(csvfile)
     
