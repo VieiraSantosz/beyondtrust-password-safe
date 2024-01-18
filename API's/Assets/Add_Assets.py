@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,17 +43,17 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify=False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
@@ -64,11 +64,14 @@ def Add_Assets():
     
     print(f"Adicionar Assets!\n")
     
-    with open(r'Caminhho do arquivo csv') as csvfile:
+    with open(r'Caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
         for row in reader:
+            
+            sleep(1)
+            
             asset_json = {
                 'AssetName'         : row['Asset'],
                 'IPAddress'         : row['Ip'],
@@ -79,36 +82,37 @@ def Add_Assets():
                 'OperatingSystem'   : row['System']
             }
 
-            assetBody = json.dumps(asset_json)
+            asset_body = json.dumps(asset_json)
             
-            urlAsset    = urlCofre + f"/Workgroups/{workgroupName}/Assets"
-            asset       = session.post(url = urlAsset, data = assetBody, headers = datype) 
+            url_asset   = url_cofre + f"/Workgroups/{workgroupname}/Assets"
+            post_asset  = session.post(url = url_asset, data = asset_body, headers = datype) 
             
-            infoAsset   = asset.json()
-            asset.raise_for_status()
+            info_asset = post_asset.json()
             
-            AssetID = infoAsset['AssetID']
+            asset_id = info_asset['AssetID']
             
-            if (asset.status_code < 399): 
-                print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {AssetID} | Status Code = {asset.status_code}")
+            if (post_asset.status_code < 399): 
+                print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
             
             else:
-                print(f"[-] {row['Asset']} não adicionado. Erro: {infoAsset} | Status Code = {asset.status_code}")
+                print(f"[-] {row['Asset']} não adicionado. Erro: {info_asset} | Status Code = {post_asset.status_code}")
 ######################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify=False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
 ##########################################################
+
 
 def main():
     PostLogIn()
     Add_Assets()
     PostLogOff()
     
-main()
+if __name__ == '__main__':    
+    main()
