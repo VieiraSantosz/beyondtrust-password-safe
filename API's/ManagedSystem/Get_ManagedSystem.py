@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,17 +43,17 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
@@ -62,30 +62,30 @@ def PostLogIn():
 ################# Puxar informações de todos os Managed System ##############################
 def Get_ManagedSystem():
     
-    urlManagedSystem    = urlCofre + '/ManagedSystems'
-    managedSystem       = session.get(url = urlManagedSystem, verify = False) 
+    url_managedsystem   = url_cofre + '/ManagedSystems'
+    get_managedsystem   = session.get(url = url_managedsystem, verify = False) 
     
-    infoSystem = managedSystem.json()
-    managedSystem.raise_for_status()
+    info_system = get_managedsystem.json()
+    get_managedsystem.raise_for_status()
     
-    print(f"Managed System! - Codigo = {managedSystem.status_code}\n")
+    print(f"Managed System! - Codigo = {get_managedsystem.status_code}\n")
     
-    for row in managedSystem.json():
+    for row in get_managedsystem.json():
         try:
-            ManagedSystemID     = row['ManagedSystemID']
-            HostName            = row['HostName']
+            managedsystem_id    = row['ManagedSystemID']
+            hostname            = row['HostName']
             
-            print(f"[+] ManagedSystemID: {ManagedSystemID} | HostName - {HostName}")
+            print(f"[+] ManagedSystemID: {str(managedsystem_id).ljust(3)} | HostName - {hostname}")
             
         except: 
-            print(f"[-] Erro: {infoSystem} | Status Code = {managedSystem.status_code}")
+            print(f"[-] Erro: {info_system} | Status Code = {get_managedsystem.status_code}")
 #################################################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify = False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
@@ -97,4 +97,5 @@ def main():
     Get_ManagedSystem()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
