@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,64 +43,66 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify=False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
 
 
-################# Adicionar Managed Account #################################
+################# Adicionar Managed Account pelo Id do Managed System #################################
 def Add_ManagedAccount_by_ManagedSystemID():
     
     print("Adicionar Managed Account\n")
     
-    with open(r'Caminhho do arquivo csv') as csvfile:
+    with open(r'Caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
         for row in reader:
-                ManagedSystemID = row['ManagedSystemID']
+
+                sleep(0.5)
+            
+                managedsystem_id = row['ManagedSystemID']
                 
-                ManagedAccount = {
-                    'Accountname'           :'Wesley',
-                    'Password'              :'1234',
-                    'Description'           :'Criado via API Homolagacao',
-                    'ApiEnabled'            :'True',
-                    'ChangeServicesFlag'    :'false',
-                    'RestartServicesFlag'   :'false'
+                managedaccount = {
+                    'Accountname'           :'string',
+                    'Password'              :'string',
+                    'Description'           :'string',
+                    'ApiEnabled'            :'bool',
+                    'ChangeServicesFlag'    :'bool',
+                    'RestartServicesFlag'   :'bool'
                 }
                 
-                urlAdd              = urlCofre + f'/ManagedSystems/{ManagedSystemID}/ManagedAccounts'
-                add_managedaccount  = session.post(url = urlAdd, verify = False, data = ManagedAccount)
+                url_managedaccount  = url_cofre + f'/ManagedSystems/{managedsystem_id}/ManagedAccounts'
+                post_managedaccount = session.post(url = url_managedaccount, verify = False, data = managedaccount)
                 
-                infoAccount = add_managedaccount.json()
-                add_managedaccount.raise_for_status()
+                info_account = post_managedaccount.json()
                 
-                AccountName         = infoAccount['AccountName']
-                ManagedAccountID    = infoAccount['ManagedAccountID']
+                try:
+                    account_name         = info_account['AccountName']
+                    managedaccount_id    = info_account['ManagedAccountID']
+                    
+                except:
+                     print(f"[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}")
                  
-                if (add_managedaccount.status_code < 399): 
-                    print(f"[+] Conta {AccountName} criado com sucesso. - ManagedAccountID: {ManagedAccountID} | Status Code = {add_managedaccount.status_code}")
-
-                else:
-                    print(f"[-] Conta {AccountName} não criada. Erro: {infoAccount} | Status Code = {add_managedaccount.status_code}")    
+                print(f"[+] Conta {account_name} criado com sucesso - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}")
 ###########################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify=False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
@@ -112,4 +114,5 @@ def main():
     Add_ManagedAccount_by_ManagedSystemID()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
