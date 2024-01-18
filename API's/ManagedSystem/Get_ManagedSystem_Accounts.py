@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Puxar informações dos Managed System que não possuem contas cadastradas ##############################
+################# Puxar informações dos Managed System que não possuem contas cadastradas pelo Id #################
 def Get_ManagedSystem_Account():
     
     cont = 1
