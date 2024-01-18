@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,76 +43,81 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
 
 
-################# Retrieve Password #######################
+################# Resgatar Senha de Managed Account pelo Id #######################
 def RetrivePassword(): 
     
-    ##### Buscar as informações da conta #####
-    contaID = 'id_da_conta'
+    ##### Buscar as informações da Managed Account pelo Id #####
+    conta_id = 'id da conta'
     
-    urlmanagedAccount   = urlCofre + f"/ManagedAccounts/{contaID}"
-    managedAccount      = session.get(url = urlmanagedAccount, verify=False)
+    url_managedaccount  = url_cofre + f"/ManagedAccounts/{conta_id}"
+    get_managedaccount  = session.get(url = url_managedaccount, verify=False)
     
-    infoAccount = managedAccount.json()
+    info_account = get_managedaccount.json()
     
-    ManagedAccountID    = infoAccount['ManagedAccountID']
-    ManagedSystemID     = infoAccount['ManagedSystemID']
-    AccountName         = infoAccount['AccountName']
-    
+    try:
+        managedaccount_id   = info_account['ManagedAccountID']
+        managedsystem_id    = info_account['ManagedSystemID']
+        accountname         = info_account['AccountName']
+        
+    except:
+        print(f'[-] Erro: {info_account} | Status Code = {get_managedaccount.status_code}')
+        return 0
+
     
     ##### Realizar o requests da senha #####
-    requestsBody = {
+    requests_json = {
         'AccessType'        : "View",
-        'SystemID'          : ManagedSystemID,
-        'AccountID'         : ManagedAccountID,
+        'SystemID'          : managedsystem_id,
+        'AccountID'         : managedaccount_id,
         'DurationMinutes'   : 2,
         'Reason'            : "Acesso a solicitação de senha via API",
     }
-    dataRequest = json.dumps(requestsBody)  
+    requests_body = json.dumps(requests_json)  
     
-    urlRequest  = urlCofre + '/Requests'
-    requests    = session.post(url = urlRequest, data = dataRequest, headers = datype)
+    url_requests    = url_cofre + '/Requests'
+    post_requests   = session.post(url = url_requests, data = requests_body, headers = datype)
     
-    requestsID = requests.json()
+    requests_id = post_requests.json()
     
-    credentialjson = {
+    credential_json = {
         'type': 'password',
     }
-    credential_body = json.dumps(credentialjson)
+    credential_body = json.dumps(credential_json)
     
-    urlCredential   = urlCofre + f'/Credentials/{requestsID}'
-    credential      = session.get(url = urlCredential, params = credential_body, verify = False)
+    url_credential  = url_cofre + f'/Credentials/{requests_id}'
+    get_credential  = session.get(url = url_credential, params = credential_body, verify = False)
     
-    password = credential.json()
+    password = get_credential.json()
     
-    print(f"Conta - {AccountName}")
+    print(f"Conta - {accountname}")
     print(f"Senha - {password}")
     
     
     ##### Put Check-in Request #####
-    checkin = urlCofre + f'/Requests/{requestsID}/Checkin'
+    url_checkin = url_cofre + f'/Requests/{requests_id}/Checkin'
     
-    reason = {
+    reason_json = {
         'Reason': 'Acesso a solicitação de senha via API'
     }
-    dataReason = json.dumps(reason)  
+    data_reason = json.dumps(reason_json)  
 
-    session.put(checkin, data = dataReason, headers = datype)
+    session.put(url_checkin, data = data_reason, headers = datype)
     
     print("\nCheck-in Resquest feito!")
 #########################################################
@@ -120,7 +125,7 @@ def RetrivePassword():
 
 ################# LogOff #################################
 def PostLogOff():
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify=False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
     print("\nUsuário acabou de sair da sessão! - Código =", logoff.status_code)
     print()
@@ -132,4 +137,5 @@ def main():
     RetrivePassword()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
