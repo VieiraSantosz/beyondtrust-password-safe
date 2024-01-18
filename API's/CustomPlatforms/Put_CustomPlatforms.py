@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,55 +43,55 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
 
 
-################# Mudar o Id da Custom Platform de algum Managed System ##############################
+################# Atualizar a Custom Platform pelo Id do Managed System ##############################
 def Put_CustomPlatforms():
     
-    systemID = 'id_do_managed_system'
+    system_id = 'id do managed system'
     
     system_json = {
         'HostName'      : 'string',
         'PlatformID'    : int
     }
     
-    urlManagedSystem    = urlCofre + f'/ManagedSystems/{systemID}'
-    managedSystem       = session.put(url = urlManagedSystem, data = system_json, verify = False) 
+    url_managedsystem   = url_cofre + f'/ManagedSystems/{system_id}'
+    put_managedsystem   = session.put(url = url_managedsystem, data = system_json, verify = False) 
     
-    infoSystem = managedSystem.json()
+    info_system = put_managedsystem.json()
     
-    print(f"Managed System! - Codigo = {managedSystem.status_code}\n")
+    print(f"Managed System! - Codigo = {put_managedsystem.status_code}\n")
     
     try:
-        ManagedSystemID = infoSystem['ManagedSystemID']
-        HostName        = infoSystem['HostName']
-        PlatformID      = infoSystem['PlatformID']
+        managedsystem_id    = info_system['ManagedSystemID']
+        hostname            = info_system['HostName']
+        platform_id         = info_system['PlatformID']
         
-        print(f"[+] Sucesso: ManagedSystemID: {ManagedSystemID} | HostName: {HostName} | PlatformID: {PlatformID}")
+        print(f"[+] Sucesso: ManagedSystemID: {managedsystem_id} | HostName: {hostname} | PlatformID: {platform_id}")
             
     except: 
-        print(f"[-] Erro: {infoSystem} | Status Code = {managedSystem.status_code}")
+        print(f"[-] Erro: {info_system} | Status Code = {put_managedsystem.status_code}")
 #################################################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify = False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
@@ -103,4 +103,5 @@ def main():
     Put_CustomPlatforms()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
