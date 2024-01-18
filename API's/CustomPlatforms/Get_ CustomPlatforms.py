@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,49 +43,48 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
 
 
-################# Puxar informações de todos os Custom Platforms ##############################
+################# Puxar informações de todas as Custom Platforms ##############################
 def Get_CustomPlatforms():
     
-    urlCustomPlatforms    = urlCofre + '/CustomPlatforms'
-    customPlatforms       = session.get(url = urlCustomPlatforms, verify = False) 
+    url_customplatforms = url_cofre + '/CustomPlatforms'
+    get_customplatforms = session.get(url = url_customplatforms, verify = False) 
     
-    infoPlatforms = customPlatforms.json()
-    customPlatforms.raise_for_status()
+    info_platforms = get_customplatforms.json()
     
-    print(f"Custom Platforms! - Codigo = {customPlatforms.status_code}\n")
+    print(f"Custom Platforms! - Codigo = {get_customplatforms.status_code}\n")
     
-    for row in customPlatforms.json():
+    for row in get_customplatforms.json():
         try:
-            PlatformID  = row['id']
-            Name        = row['name']
+            platform_id     = row['id']
+            name            = row['name']
             
-            print(f"[+] PlatformID: {PlatformID} | Name - {Name}")
+            print(f"[+] PlatformID: {platform_id} | Name - {name}")
             
         except: 
-            print(f"[-] Erro: {infoPlatforms} | Status Code = {customPlatforms.status_code}")
+            print(f"[-] Erro: {info_platforms} | Status Code = {get_customplatforms.status_code}")
 #################################################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify = False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
@@ -97,4 +96,5 @@ def main():
     Get_CustomPlatforms()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
