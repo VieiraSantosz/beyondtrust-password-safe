@@ -17,14 +17,14 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
 chave_api = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
