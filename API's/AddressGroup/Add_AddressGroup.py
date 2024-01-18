@@ -15,16 +15,16 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ipCofre       = '192.168.10.10'
-urlCofre      = f'https://{ipCofre}/BeyondTrust/api/public/v3'
-workgroupName = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chaveApi = 'xxxxx'
-user     = 'user'
-headers  = {'Authorization': f'PS-Auth key={chaveApi};' f'runas={user};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -43,77 +43,75 @@ session.headers.update(headers)
 ################# LogIn #################################
 def PostLogIn():
     
-    login = session.post(url = f'{urlCofre}/Auth/SignAppin', verify = False) 
+    login = session.post(url = f'{url_cofre}/Auth/SignAppin', verify = False) 
     
-    infoLogin = login.json()
+    info_login = login.json()
     
-    userId      = infoLogin['UserId']
-    userName    = infoLogin['UserName']
-    name        = infoLogin['Name']
+    userid      = info_login['UserId']
+    username    = info_login['UserName']
+    name        = info_login['Name']
     
     print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userId, 
-          "\nUserName:", userName, 
+    print("\nUserId..:", userid, 
+          "\nUserName:", username, 
           "\nName....:", name)
     print()
 #########################################################
 
 
-################# Adicionar Assets no Address Group #################################
+################# Adicionar Máquinas no Address Group #################################
 def Add_AddressGroup():
     
-    adressGroup = session.get(url = f'{urlCofre}/Addressgroups', verify = False) 
+    adressgroup = session.get(url = f'{url_cofre}/Addressgroups', verify = False) 
    
-    infoAddress = adressGroup.json()
-    adressGroup.raise_for_status()
+    info_addressgroup = adressgroup.json()
                 
-    print(f"Address Group - Codigo = {adressGroup.status_code}\n")
+    print(f"Address Group - Codigo = {adressgroup.status_code}\n")
     
-    for row in adressGroup.json():
+    for row in adressgroup.json():
         try:
-            addressID   = row['AddressGroupID']
-            addressName = row['Name']
+            address_id   = row['AddressGroupID']
+            address_name = row['Name']
             
-            print(f"AddressGroupID - {addressID} | AddressGroupName - {addressName}")
+            print(f"AddressGroupID - {address_id} | AddressGroupName - {address_name}")
             
         except: 
-            print(f"Erro: {infoAddress}")
+            print(f"Erro: {info_addressgroup}")
             
             
-    addressGroupId = input("\nDigite o ID do Address Group: ")
+    addressgroup_id = input("\nDigite o ID do Address Group: ")
     print()
     
-    with open(r'Caminhho do arquivo csv') as csvfile:
+    with open(r'Caminho do arquico csv') as csvfile:
     
         reader = csv.DictReader(csvfile)
     
         for row in reader:
             try:
                 address_json = { 
-                    'Type' : row['Type'],
+                    'Type'  : row['Type'],
                     'Value' : row['Value'], 
                     'Omit'  : row['Omit'] 
                 }
     
-                addressBody = json.dumps(address_json) 
+                address_body = json.dumps(address_json) 
         
-                urlAdress   = f'{urlCofre}/AddressGroups/{addressGroupId}/Addresses'
-                address     = session.post(url = urlAdress, data = addressBody, headers = datype)
+                url_adress      = f'{url_cofre}/AddressGroups/{addressgroup_id}/Addresses'
+                post_address    = session.post(url = url_adress, data = address_body, headers = datype)
                 
-                infoAddress = address.json()
-                address.raise_for_status()
+                info_address = post_address.json()
                 
-                print(f"[+] {row['Value']} adicionado com sucesso. | Status Code = {address.status_code}")
+                print(f"[+] {row['Value']} adicionado com sucesso. | Status Code = {post_address.status_code}")
 
             except:
-                print(f"[-] {row['Value']} não adicionado. Erro: {infoAddress} | Status Code = {address.status_code}")
+                print(f"[-] {row['Value']} não adicionado. Erro: {info_address} | Status Code = {post_address.status_code}")
 #####################################################################################
 
 
 ################# LogOff #################################
 def PostLogOff():
     
-    logoff = session.post(url = f'{urlCofre}/Auth/Signout', verify = False)  
+    logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
     print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
     print()
@@ -125,4 +123,5 @@ def main():
     Add_AddressGroup()
     PostLogOff()
     
-main()
+if __name__ == '__main__':
+    main()
