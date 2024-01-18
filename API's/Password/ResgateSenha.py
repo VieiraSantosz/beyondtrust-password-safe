@@ -59,7 +59,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Resgatar Senha de Managed Account pelo Id #######################
+################# Resgatar Senha pelo Id da Managed Account #######################
 def RetrivePassword(): 
     
     ##### Buscar as informações da Managed Account pelo Id #####
