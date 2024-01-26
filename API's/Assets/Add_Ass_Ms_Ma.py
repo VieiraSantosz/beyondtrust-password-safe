@@ -15,26 +15,29 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-cofre_homolagacao   = '172.26.168.167'
-cofre_porto         = '172.26.6.163'
-
-url_cofre           = f'https://{cofre_homolagacao}/BeyondTrust/api/public/v3'
-workgroupname       = "BeyondTrust Workgroup"
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupName  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chave_homologacao   = 'b457a2c98328488ec7b6ec784ccaf6bd941cf7fd10151ac8751a2068a53ed6ae234dd0429b3c4c5c67ebf5355d2e43a1965adcf441f642d2894687645c77239d'
-chave_porto         = '676a544afc3d2109c405baea3baf642c7fd02a8e4d329f0fcf2b4348eb8290a1028a15b09c65d8605cc001c1e2abbfd9bf843e2f57d4f0d5ae391cc4731dc83b'
-
-user_porto          = 'vieira.porto'
-user_homolagacao    = 'vieira.homolagacao'
-
-headers             = {'Authorization': f'PS-Auth key={chave_homologacao};' f'runas={user_homolagacao};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
 ########################
+
+
+################# Persistencia de Login #################
+session             = requests.session()
+session.proxies     = proxy
+session.trust_env   = False
+session.verify      = False
+session.headers.update(headers)
+#########################################################
 
 
 ################# Persistencia de Login #################
