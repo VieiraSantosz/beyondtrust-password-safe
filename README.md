@@ -1,4 +1,4 @@
-# BeyondTrust PasswordSafe
+# BeyondTrust Password Safe
 
 Desenvolvimento de API's para facilitar a integração com o cofre de senhas da BeyondTrust.
 
