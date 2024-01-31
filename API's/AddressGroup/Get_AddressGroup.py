@@ -73,10 +73,10 @@ def Get_AddressGroup():
             address_id   = row['AddressGroupID']
             address_name = row['Name']
             
-            print(f'AddressGroupID - {address_id} | AddressGroupName - {address_name}')
+            print(f'AddressGroupID - {str(address_id).ljust(5)} | AddressGroupName - {address_name}')
             
         except: 
-            print(f'Erro: {info_group}')
+            print(f'[-] Erro: {info_group}')
         
         
     addressgroup_id = input('\nDigite o ID do Address Group: ')
