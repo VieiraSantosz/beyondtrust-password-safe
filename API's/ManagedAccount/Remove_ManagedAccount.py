@@ -85,10 +85,10 @@ def Remove_ManagedAccount_by_ManagedSystemID():
             remove_managedaccount   = session.delete(url = url_managedaccount, verify = False)
             
             try:
-                print(f"[+] Managed Account removido do '{hostname}' com sucesso. | Codigo = {remove_managedaccount.status_code}")
+                print(f"[+] Managed Account removido do '{hostname}' com sucesso. | Status Code = {remove_managedaccount.status_code}")
             
             except:
-                print(f"Erro: {remove_managedaccount.json()}")  
+                print(f"Erro: {remove_managedaccount.json()} Status Code = {remove_managedaccount.status_code}")  
 ###########################################################################
 
 
