@@ -64,7 +64,7 @@ def Remove_Asset_by_id():
     
     print("Remover Assets!\n")
     
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\Assets\.removeassets.csv') as csvfile:
+    with open(r'Caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
