@@ -95,7 +95,7 @@ def Add_Assets():
                 print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
             
             else:
-                print(f"[-] {row['Asset']} não adicionado. Erro: {info_asset} | Status Code = {post_asset.status_code}")
+                print(f"[-] Erro: {info_asset} | Status Code = {post_asset.status_code}")
 ######################################################################
 
 
