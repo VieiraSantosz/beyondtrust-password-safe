@@ -95,8 +95,7 @@ def Add_Assets_ManagedSystem_ManagedAccount():
                 print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
                 
             except:
-                print(f"[-] {row['Asset']} não adicionado. Erro: {info_asset} | Status Code = {post_asset.status_code}\n")
-              
+                print(f"[-] Erro: {info_asset} | Status Code = {post_asset.status_code}\n")
               
 
             ##### Adicionar Assets em Managed System pelo Id #####
