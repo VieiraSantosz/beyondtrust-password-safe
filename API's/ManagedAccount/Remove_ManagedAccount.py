@@ -84,10 +84,10 @@ def Remove_ManagedAccount_by_ManagedSystemID():
             url_managedaccount      = url_cofre + f"/ManagedSystems/{managedaystem_id}/ManagedAccounts"
             remove_managedaccount   = session.delete(url = url_managedaccount, verify = False)
             
-            if (remove_managedaccount.status_code < 399):
+            try:
                 print(f"[+] Managed Account removido do '{hostname}' com sucesso. | Codigo = {remove_managedaccount.status_code}")
             
-            else:
+            except:
                 print(f"Erro: {remove_managedaccount.json()}")  
 ###########################################################################
 
