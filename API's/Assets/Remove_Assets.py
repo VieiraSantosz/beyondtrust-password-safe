@@ -59,12 +59,12 @@ def PostLogIn():
 #########################################################
 
 
-################# Remover Assets pelo Id #################################
+################# Remover Asset #################################
 def Remove_Asset_by_id():
     
     print("Remover Assets!\n")
     
-    with open(r'Caminho do arquivo csv') as csvfile:
+    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\Assets\.removeassets.csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
@@ -74,21 +74,22 @@ def Remove_Asset_by_id():
             url_get_asset   = url_cofre + f"/Assets/{asset_id}"
             get_asset       = session.get(url = url_get_asset, verify=False)
             
-            info_asset = get_asset.json()
-            get_asset.raise_for_status()
-            
-            asset_name = info_asset['AssetName'] 
+            try:
+                info_asset = get_asset.json()
+                asset_name = info_asset['AssetName'] 
+                
+            except:
+                print(f'OBS - Assest com o ID {asset_id} já foi removido.')
+                continue
             
             url_remove_asset    = url_cofre + f"/Assets/{asset_id}"
             remove_asset        = session.delete(url = url_remove_asset, verify=False)
-            
-            remove_asset.raise_for_status()
 
-            if (remove_asset.status_code < 399):
+            try:
                 print(f"[+] {asset_name} removido com sucesso. | Status Code = {remove_asset.status_code}")
             
-            else:
-                print(f"[-] {asset_name} não removido. Erro: {remove_asset.json()} | Status Code = {remove_asset.status_code}")
+            except:
+                print(f"[-] Erro: {remove_asset.json()}. | Status Code = {remove_asset.status_code}")
 ####################################################################
 
 
