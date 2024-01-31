@@ -73,10 +73,10 @@ def Add_AddressGroup():
             address_id   = row['AddressGroupID']
             address_name = row['Name']
             
-            print(f"AddressGroupID - {address_id} | AddressGroupName - {address_name}")
+            print(f"AddressGroupID - {str(address_id).ljust(5)} | AddressGroupName - {address_name}")
             
         except: 
-            print(f"Erro: {info_addressgroup}")
+            print(f"[-] Erro: {info_addressgroup}")
             
             
     addressgroup_id = input("\nDigite o ID do Address Group: ")
@@ -104,7 +104,7 @@ def Add_AddressGroup():
                 print(f"[+] {row['Value']} adicionado com sucesso. | Status Code = {post_address.status_code}")
 
             except:
-                print(f"[-] {row['Value']} não adicionado. Erro: {info_address} | Status Code = {post_address.status_code}")
+                print(f"[-] Erro: {info_address} | Status Code = {post_address.status_code}")
 #####################################################################################
 
 
