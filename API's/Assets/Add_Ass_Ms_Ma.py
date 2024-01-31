@@ -74,7 +74,7 @@ def Add_Assets_ManagedSystem_ManagedAccount():
     print(f"Adicionar Assets | Managed System | Managed Account!\n")
     
     ##### Adicionar Assets #####    
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\Assets\.assets.csv') as csvfile:
+    with open(r'Caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
@@ -110,9 +110,9 @@ def Add_Assets_ManagedSystem_ManagedAccount():
 
             ##### Adicionar Assets em Managed System pelo Id #####
             managedsystem_json = {
-                'PlatformID'         : 38,
-                'Description'        : 'Adicionado pela API Zika', 
-                'AutoManagementFlag' : 'False'
+                'PlatformID'         : int,
+                'Description'        : 'string', 
+                'AutoManagementFlag' : 'bool'
             }
             managedsystem_body = json.dumps(managedsystem_json)
             
@@ -133,12 +133,12 @@ def Add_Assets_ManagedSystem_ManagedAccount():
             
             ##### Adicionar Managed Account nos Managed System pelo Id #####    
             managedaccount = {
-                'Accountname'           :'suporteporto',
-                'Password'              :'porto@2021',
-                'Description'           :'Criado via API',
-                'ApiEnabled'            :'True',
-                'ChangeServicesFlag'    :'false',
-                'RestartServicesFlag'   :'false'
+                'Accountname'           :'string',
+                'Password'              :'string',
+                'Description'           :'string',
+                'ApiEnabled'            :'bool',
+                'ChangeServicesFlag'    :'bool',
+                'RestartServicesFlag'   :'bool'
             }
             
             url_managedaccount  = url_cofre + f'/ManagedSystems/{managedsystem_id}/ManagedAccounts'
@@ -151,6 +151,9 @@ def Add_Assets_ManagedSystem_ManagedAccount():
                 managedaccount_id    = info_account['ManagedAccountID']
                 
                 print(f"[+] Conta {account_name} criado com sucesso no {hostname} - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}\n")
+                
+                with open ('Caminho do arquivo csv', 'a') as file:
+                    file.write(f'\n{managedaccount_id}')
                 
             except:
                     print(f"[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}")                       
