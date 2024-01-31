@@ -70,7 +70,7 @@ def Add_ManagedAccount_by_ManagedSystemID():
         
         for row in reader:
 
-                sleep(0.5)
+                sleep(1)
             
                 managedsystem_id = row['ManagedSystemID']
                 
@@ -91,11 +91,11 @@ def Add_ManagedAccount_by_ManagedSystemID():
                 try:
                     account_name         = info_account['AccountName']
                     managedaccount_id    = info_account['ManagedAccountID']
+
+                    print(f"[+] Conta {account_name} criado com sucesso - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}")
                     
                 except:
                      print(f"[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}")
-                 
-                print(f"[+] Conta {account_name} criado com sucesso - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}")
 ###########################################################################
 
 
