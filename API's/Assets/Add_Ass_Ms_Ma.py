@@ -40,15 +40,6 @@ session.headers.update(headers)
 #########################################################
 
 
-################# Persistencia de Login #################
-session             = requests.session()
-session.proxies     = proxy
-session.trust_env   = False
-session.verify      = False
-session.headers.update(headers)
-#########################################################
-
-
 ################# LogIn #################################
 def PostLogIn():
     
