@@ -60,12 +60,12 @@ def PostLogIn():
 
 
 ################# Adicionar Assets em Manged System #################################
-def Add_Assets_ManagedSystem_ManagedAccount():
+def Add_Assets_ManagedSystem():
     
-    print(f"Adicionar Assets | Managed System | Managed Account!\n")
+    print(f"Adicionar Assets | Managed System!\n")
     
     ##### Adicionar Assets #####    
-    with open(r'C:\Users\wsantos\Documents\APIs - Netconn\Assets\.assets.csv') as csvfile:
+    with open(r'Caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
@@ -95,15 +95,14 @@ def Add_Assets_ManagedSystem_ManagedAccount():
                 print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
                 
             except:
-                print(f"[-] {row['Asset']} não adicionado. Erro: {info_asset} | Status Code = {post_asset.status_code}\n")
+                print(f"[-] Erro: {info_asset} | Status Code = {post_asset.status_code}\n")
               
               
-
             ##### Adicionar Assets em Managed System pelo Id #####
             managedsystem_json = {
-                'PlatformID'         : 38,
-                'Description'        : 'Adicionado pela API Zika', 
-                'AutoManagementFlag' : 'False'
+                'PlatformID'         : int,
+                'Description'        : 'string', 
+                'AutoManagementFlag' : 'bool'
             }
             managedsystem_body = json.dumps(managedsystem_json)
             
@@ -135,7 +134,7 @@ def PostLogOff():
 
 def main():
     PostLogIn()
-    Add_Assets_ManagedSystem_ManagedAccount()
+    Add_Assets_ManagedSystem()
     PostLogOff()
     
 if __name__ == '__main__':    
