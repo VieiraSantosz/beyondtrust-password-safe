@@ -1,23 +1,13 @@
 import requests
-import json
-import urllib3
-import ssl
-from time import sleep
-import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,15 +41,16 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
 
-################# Puxar informações de todas as Custom Platforms ##############################
+################# Puxar informações de todos as Custom Platforms ##############################
 def Get_CustomPlatforms():
     
     url_customplatforms = url_cofre + '/CustomPlatforms'
@@ -67,17 +58,17 @@ def Get_CustomPlatforms():
     
     info_platforms = get_customplatforms.json()
     
-    print(f"Custom Platforms! - Codigo = {get_customplatforms.status_code}\n")
+    print(f'Custom Platforms! - Codigo = {get_customplatforms.status_code}\n')
     
     for row in get_customplatforms.json():
         try:
             platform_id     = row['id']
             name            = row['name']
             
-            print(f"[+] PlatformID: {platform_id} | Name - {name}")
+            print(f'[+] PlatformID: {str(platform_id).ljust(4)} | Name - {name}')
             
         except: 
-            print(f"[-] Erro: {info_platforms} | Status Code = {get_customplatforms.status_code}")
+            print(f'[-] Erro: {info_platforms} | Status Code = {get_customplatforms.status_code}')
 #################################################################################################
 
 
@@ -86,7 +77,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
