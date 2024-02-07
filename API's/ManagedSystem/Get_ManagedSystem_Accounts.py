@@ -1,30 +1,22 @@
-import requests
-import json
-import urllib3
-import ssl
 from time import sleep
+import requests
 import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
-ip_cofre       = 'ip do cofre'
-url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+cofre_work      = '172.26.6.157'
+url_cofre       = f'https://{cofre_work}/BeyondTrust/api/public/v3'
+workgroupname   = 'BeyondTrust Workgroup'
 ##########################
 
 
 ### Configuração API ###
-chave_api = 'xxxxx'
-user      = 'user'
-headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
+chave_work  = 'a15dfe5a8932c6cea1f94ef7b6a44e497760a1d049b348afeeac5f1a34cf13d96d4de5faaea3b40c42f7bc8e89642e2831fead9b491ca04fbfc4810fb95cf1b5'
+user_work   = 'vieira.workstation'
+headers     = {'Authorization': f'PS-Auth key={chave_work};' f'runas={user_work};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
@@ -51,26 +43,26 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
 
-################# Puxar informações dos Managed System que não possuem contas cadastradas pelo Id #################
+################# Puxar informações dos Managed System que não possuem contas cadastradas ##############################
 def Get_ManagedSystem_Account():
     
     cont = 1
     
-    with open(r'Caminho do arquivo csv') as csvfile:
+    with open(r'caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
         for row in reader:
-            
-            sleep(0.5)
+            sleep(1)
             
             managedsystem_id = row['ManagedSystemID']
     
@@ -89,7 +81,7 @@ def Get_ManagedSystem_Account():
                 hostname    = info['HostName']
                 managed_id  = info['ManagedSystemID']
                 
-                with open ('Caminho do arquivo csv', 'a') as file:
+                with open ('.camiinho do arquivo csv', 'a') as file:
                         file.write(f'\n{hostname},{managed_id}')
                         
                         print(f'[+] {cont} | {hostname} - {managed_id}')
@@ -102,7 +94,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
