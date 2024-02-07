@@ -50,7 +50,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Remover Managed System pelo Id #################################
+################# Remover Managed System e Asset pelo Id #################################
 def Remove_ManagedSystem_and_Asset_by_ID():
     
     with open(r'caminho do arquivo csv') as csvfile:
