@@ -1,23 +1,14 @@
 import requests
 import json
-import urllib3
-import ssl
-from time import sleep
-import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,21 +42,22 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
 
-################# Resgatar Senha pelo Id da Managed Account #######################
+################# Resgate de Senha de Managed Account pelo Id #######################
 def RetrivePassword(): 
     
     ##### Buscar as informações da Managed Account pelo Id #####
-    conta_id = 'id da conta'
+    conta_id = 'id da conta para resgate da senha'
     
-    url_managedaccount  = url_cofre + f"/ManagedAccounts/{conta_id}"
+    url_managedaccount  = url_cofre + f'/ManagedAccounts/{conta_id}'
     get_managedaccount  = session.get(url = url_managedaccount, verify=False)
     
     info_account = get_managedaccount.json()
@@ -78,15 +70,15 @@ def RetrivePassword():
     except:
         print(f'[-] Erro: {info_account} | Status Code = {get_managedaccount.status_code}')
         return 0
-
+    
     
     ##### Realizar o requests da senha #####
     requests_json = {
-        'AccessType'        : "View",
+        'AccessType'        : 'View',
         'SystemID'          : managedsystem_id,
         'AccountID'         : managedaccount_id,
-        'DurationMinutes'   : 2,
-        'Reason'            : "Acesso a solicitação de senha via API",
+        'DurationMinutes'   : int,
+        'Reason'            : 'string'
     }
     requests_body = json.dumps(requests_json)  
     
@@ -96,7 +88,7 @@ def RetrivePassword():
     requests_id = post_requests.json()
     
     credential_json = {
-        'type': 'password',
+        'type': 'password'
     }
     credential_body = json.dumps(credential_json)
     
@@ -105,21 +97,21 @@ def RetrivePassword():
     
     password = get_credential.json()
     
-    print(f"Conta - {accountname}")
-    print(f"Senha - {password}")
+    print(f'Conta - {accountname}')
+    print(f'Senha - {password}')
     
     
     ##### Put Check-in Request #####
     url_checkin = url_cofre + f'/Requests/{requests_id}/Checkin'
     
     reason_json = {
-        'Reason': 'Acesso a solicitação de senha via API'
+        'Reason': 'string'
     }
     data_reason = json.dumps(reason_json)  
 
     session.put(url_checkin, data = data_reason, headers = datype)
     
-    print("\nCheck-in Resquest feito!")
+    print('\nCheck-in Resquest feito!')
 #########################################################
 
 
@@ -127,7 +119,7 @@ def RetrivePassword():
 def PostLogOff():
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
-    print("\nUsuário acabou de sair da sessão! - Código =", logoff.status_code)
+    print('\nUsuário acabou de sair da sessão! - Código =', logoff.status_code)
     print()
 ##########################################################
 
