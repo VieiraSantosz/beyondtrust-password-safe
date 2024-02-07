@@ -70,7 +70,7 @@ def Put_CustomPlatforms():
         hostname            = info_system['HostName']
         platform_id         = info_system['PlatformID']
         
-        print(f'[+] Sucesso: HostName: {hostname} | PlatformID: {platform_id} | Status Code = {put_managedsystem.status_code}')
+        print(f'[+] Platform do "{hostname}" trocado com sucesso. - PlatformID: {platform_id} | Status Code = {put_managedsystem.status_code}')
             
     except: 
         print(f'[-] Erro: {info_system} | Status Code = {put_managedsystem.status_code}')
