@@ -7,16 +7,16 @@ warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.
 
 
 ### Configuração Cofre ###
-cofre_work      = '172.26.6.157'
-url_cofre       = f'https://{cofre_work}/BeyondTrust/api/public/v3'
-workgroupname   = 'BeyondTrust Workgroup'
+ip_cofre       = 'ip do cofre'
+url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
 ### Configuração API ###
-chave_work  = 'a15dfe5a8932c6cea1f94ef7b6a44e497760a1d049b348afeeac5f1a34cf13d96d4de5faaea3b40c42f7bc8e89642e2831fead9b491ca04fbfc4810fb95cf1b5'
-user_work   = 'vieira.workstation'
-headers     = {'Authorization': f'PS-Auth key={chave_work};' f'runas={user_work};'}
+chave_api = 'xxxxx'
+user      = 'user'
+headers   = {'Authorization': f'PS-Auth key={chave_api};' f'runas={user};'}
 
 datype  = {'Content-type': 'application/json'}
 proxy   = {'http': None,'https': None}
