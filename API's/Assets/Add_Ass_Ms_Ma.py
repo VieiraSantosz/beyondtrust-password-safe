@@ -59,7 +59,7 @@ def Add_Assets_ManagedSystem_ManagedAccount():
     print(f'Adicionar Assets | Managed System | Managed Account!\n')
     
     ##### Adicionar Assets #####    
-    with open(r'caminho do arquivo csv') as csvfile:
+    with open(r'caminho do arquvio csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
@@ -79,8 +79,9 @@ def Add_Assets_ManagedSystem_ManagedAccount():
             url_asset   = url_cofre + f'/Workgroups/{workgroupname}/Assets'
             post_asset  = session.post(url = url_asset, data = asset_body, headers = datype) 
             
+            info_asset = post_asset.json()
+            
             try:
-                info_asset = post_asset.json()
                 asset_id   = info_asset['AssetID']
                 
                 print(f'[+] {row["Asset"]} adicionado em Asset com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}')
@@ -121,19 +122,16 @@ def Add_Assets_ManagedSystem_ManagedAccount():
             url_managedaccount  = url_cofre + f'/ManagedSystems/{managedsystem_id}/ManagedAccounts'
             post_managedaccount = session.post(url = url_managedaccount, verify = False, data = managedaccount)
             
+            info_account = post_managedaccount.json()
+            
             try:
-                info_account = post_managedaccount.json()
-                
                 account_name         = info_account['AccountName']
                 managedaccount_id    = info_account['ManagedAccountID']
                 
                 print(f'[+] Conta {account_name} criado com sucesso no {hostname} - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}\n')
                 
-                with open ('Assets\.idmanagedaccount.csv', 'a') as file:
-                    file.write(f'\n{managedaccount_id}')
-                
             except:
-                    print(f'[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}')                       
+                print(f'[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}')                       
 ####################################################################################################
 
 
