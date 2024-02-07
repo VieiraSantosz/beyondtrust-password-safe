@@ -1,23 +1,16 @@
+from time import sleep
 import requests
 import json
-import urllib3
-import ssl
-from time import sleep
 import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +44,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -62,14 +56,13 @@ def PostLogIn():
 ################# Adicionar Asset #################################
 def Add_Assets():
     
-    print(f"Adicionar Assets!\n")
+    print(f'Adicionar Assets!\n')
     
-    with open(r'Caminho do arquivo csv') as csvfile:
+    with open(r'caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
         for row in reader:
-            
             sleep(1)
             
             asset_json = {
@@ -77,25 +70,24 @@ def Add_Assets():
                 'IPAddress'         : row['Ip'],
                 'DnsName'           : row['Dns'],
                 'DomainName'        : row['Domain'],
-                'MacAddress'        : row['Mac'],
                 'AssetType'         : row['Type'],
                 'OperatingSystem'   : row['System']
             }
 
             asset_body = json.dumps(asset_json)
             
-            url_asset   = url_cofre + f"/Workgroups/{workgroupname}/Assets"
+            url_asset   = url_cofre + f'/Workgroups/{workgroupname}/Assets'
             post_asset  = session.post(url = url_asset, data = asset_body, headers = datype) 
             
             info_asset = post_asset.json()
             
             asset_id = info_asset['AssetID']
             
-            if (post_asset.status_code < 399): 
-                print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
+            try:
+                print(f'[+] {row["Asset"]} adicionado em Asset com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}')
             
-            else:
-                print(f"[-] Erro: {info_asset} | Status Code = {post_asset.status_code}")
+            except:
+                print(f'[-] Erro {row["Asset"]}: {info_asset} | Status Code = {post_asset.status_code}')
 ######################################################################
 
 
@@ -104,7 +96,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
