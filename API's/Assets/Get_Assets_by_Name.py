@@ -52,7 +52,7 @@ def PostLogIn():
 #########################################################
 
 
-################# Puxar informações de todos os Assets ##############################
+################# Verificar quais Assets não estão cadastrados no cofre ##############################
 def Get_Assets_by_Name():
     
     cont = 0
