@@ -1,23 +1,13 @@
 import requests
-import json
-import urllib3
-import ssl
-from time import sleep
-import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +41,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -68,17 +59,17 @@ def Get_ManagedSystem():
     info_system = get_managedsystem.json()
     get_managedsystem.raise_for_status()
     
-    print(f"Managed System! - Codigo = {get_managedsystem.status_code}\n")
+    print(f'Managed System! - Codigo = {get_managedsystem.status_code}\n')
     
     for row in get_managedsystem.json():
         try:
             managedsystem_id    = row['ManagedSystemID']
             hostname            = row['HostName']
             
-            print(f"[+] ManagedSystemID: {str(managedsystem_id).ljust(3)} | HostName - {hostname}")
+            print(f'[+] ManagedSystemID: {str(managedsystem_id).ljust(4)} | HostName - {hostname}')
             
         except: 
-            print(f"[-] Erro: {info_system} | Status Code = {get_managedsystem.status_code}")
+            print(f'[-] Erro: {info_system} | Status Code = {get_managedsystem.status_code}')
 #################################################################################################
 
 
@@ -87,7 +78,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
