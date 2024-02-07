@@ -1,23 +1,15 @@
-import requests
-import json
-import urllib3
-import ssl
 from time import sleep
+import requests
 import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +43,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -62,34 +55,37 @@ def PostLogIn():
 ################# Remover Asset #################################
 def Remove_Asset_by_id():
     
-    print("Remover Assets!\n")
+    print('Remover Assets!\n')
     
-    with open(r'Caminho do arquivo csv') as csvfile:
+    with open(r'caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
         for row in reader:
+            sleep(1)
+            
             asset_id = row['AssetID']
             
-            url_get_asset   = url_cofre + f"/Assets/{asset_id}"
+            url_get_asset   = url_cofre + f'/Assets/{asset_id}'
             get_asset       = session.get(url = url_get_asset, verify=False)
             
+            info_asset = get_asset.json()
+            
             try:
-                info_asset = get_asset.json()
                 asset_name = info_asset['AssetName'] 
                 
             except:
                 print(f'OBS - Assest com o ID {asset_id} já foi removido.')
                 continue
             
-            url_remove_asset    = url_cofre + f"/Assets/{asset_id}"
+            url_remove_asset    = url_cofre + f'/Assets/{asset_id}'
             remove_asset        = session.delete(url = url_remove_asset, verify=False)
 
-            try:
-                print(f"[+] {asset_name} removido com sucesso. | Status Code = {remove_asset.status_code}")
+            if (remove_asset.status_code < 399):
+                print(f'[+] {asset_name} removido com sucesso. | Status Code = {remove_asset.status_code}')
             
-            except:
-                print(f"[-] Erro: {remove_asset.json()}. | Status Code = {remove_asset.status_code}")
+            else:
+                print(f'[-] Erro {asset_name}: {remove_asset}')
 ####################################################################
 
 
@@ -98,7 +94,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
