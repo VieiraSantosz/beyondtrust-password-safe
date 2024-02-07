@@ -84,11 +84,11 @@ def Remove_ManagedSystem_by_ID():
             url_remove_managedsystem    = url_cofre + f"/ManagedSystems/{managedsystem_id}"
             remove_managedsystem        = session.delete(url = url_remove_managedsystem, verify=False)
             
-            try:
+            if (remove_managedsystem.status_code < 399):
                 print(f"[+] {hostname} removido de Managed System com sucesso. | Status Code = {remove_managedsystem.status_code}")
             
-            except:
-                print(f"[-] Erro: {remove_managedsystem.json()} | Status Code = {remove_managedsystem.status_code}")
+            else:
+                print(f'[-] Erro {hostname}: {remove_managedsystem}') 
 ###########################################################################
 
 
