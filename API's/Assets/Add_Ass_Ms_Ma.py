@@ -1,23 +1,16 @@
+from time import sleep
 import requests
 import json
-import urllib3
-import ssl
-from time import sleep
 import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import os
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +44,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -62,46 +56,42 @@ def PostLogIn():
 ################# Adicionar Asset / Manged System/ Managed Account #################################
 def Add_Assets_ManagedSystem_ManagedAccount():
     
-    print(f"Adicionar Assets | Managed System | Managed Account!\n")
+    print(f'Adicionar Assets | Managed System | Managed Account!\n')
     
     ##### Adicionar Assets #####    
-    with open(r'Caminho do arquivo csv') as csvfile:
+    with open(r'caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
 
         for row in reader:
-            
             sleep(1)
             
             asset_json = {
-                'AssetName'         : row['Asset'],
-                'IPAddress'         : row['Ip'],
-                'DnsName'           : row['Dns'],
-                'DomainName'        : row['Domain'],
-                'MacAddress'        : row['Mac'],
-                'AssetType'         : row['Type'],
-                'OperatingSystem'   : row['System']
+                'AssetName'      : row['Asset'],
+                'IPAddress'      : row['Ip'],
+                'DnsName'        : row['Dns'],
+                'DomainName'     : row['Domain'],
+                'AssetType'      : row['Type'],
+                'OperatingSystem': row['System']
             }
-
             asset_body = json.dumps(asset_json)
             
-            url_asset   = url_cofre + f"/Workgroups/{workgroupname}/Assets"
+            url_asset   = url_cofre + f'/Workgroups/{workgroupname}/Assets'
             post_asset  = session.post(url = url_asset, data = asset_body, headers = datype) 
             
             try:
                 info_asset = post_asset.json()
                 asset_id   = info_asset['AssetID']
                 
-                print(f"[+] {row['Asset']} adicionado com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}")
+                print(f'[+] {row["Asset"]} adicionado em Asset com sucesso. - AssetID: {asset_id} | Status Code = {post_asset.status_code}')
                 
             except:
-                print(f"[-] Erro: {info_asset} | Status Code = {post_asset.status_code}\n")
+                print(f'[-] Erro {row["Asset"]}: {info_asset} | Status Code = {post_asset.status_code}\n')
               
 
             ##### Adicionar Assets em Managed System pelo Id #####
             managedsystem_json = {
-                'PlatformID'         : int,
-                'Description'        : 'string', 
+                'PlatformID'         : int, 
                 'AutoManagementFlag' : 'bool'
             }
             managedsystem_body = json.dumps(managedsystem_json)
@@ -109,26 +99,23 @@ def Add_Assets_ManagedSystem_ManagedAccount():
             url_managedsystem  = url_cofre + f'/Assets/{asset_id}/ManagedSystems'
             post_managedsystem = session.post(url = url_managedsystem, data = managedsystem_body, headers = datype)  
              
-            try:               
-                info_managedsystem = post_managedsystem.json()    
-                
+            info_managedsystem = post_managedsystem.json()
+             
+            try:                               
                 managedsystem_id = info_managedsystem['ManagedSystemID']
                 hostname         = info_managedsystem['HostName']  
             
-                print(f"[+] {hostname} adicionado em Managed System com sucesso. - ManagedSystemID: {managedsystem_id} | Status Code = {post_managedsystem.status_code}")
+                print(f'[+] {hostname} adicionado em Managed System com sucesso. - ManagedSystemID: {managedsystem_id} | Status Code = {post_managedsystem.status_code}')
             
             except:
-                print(f"[-] Erro: {info_managedsystem} | Status Code = {post_managedsystem.status_code}")
-            
+                print(f'[-] Erro: {info_managedsystem} | Status Code = {post_managedsystem.status_code}')
+
             
             ##### Adicionar Managed Account nos Managed System pelo Id #####    
             managedaccount = {
-                'Accountname'           :'string',
-                'Password'              :'string',
-                'Description'           :'string',
-                'ApiEnabled'            :'bool',
-                'ChangeServicesFlag'    :'bool',
-                'RestartServicesFlag'   :'bool'
+                'Accountname': 'string',
+                'Password'   : 'string',
+                'Description': 'string'
             }
             
             url_managedaccount  = url_cofre + f'/ManagedSystems/{managedsystem_id}/ManagedAccounts'
@@ -140,13 +127,13 @@ def Add_Assets_ManagedSystem_ManagedAccount():
                 account_name         = info_account['AccountName']
                 managedaccount_id    = info_account['ManagedAccountID']
                 
-                print(f"[+] Conta {account_name} criado com sucesso no {hostname} - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}\n")
+                print(f'[+] Conta {account_name} criado com sucesso no {hostname} - ManagedAccountID: {managedaccount_id} | Status Code = {post_managedaccount.status_code}\n')
                 
-                with open ('Caminho do arquivo csv', 'a') as file:
+                with open ('Assets\.idmanagedaccount.csv', 'a') as file:
                     file.write(f'\n{managedaccount_id}')
                 
             except:
-                    print(f"[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}")                       
+                    print(f'[-] Erro: {info_account} | Status Code = {post_managedaccount.status_code}')                       
 ####################################################################################################
 
 
@@ -155,7 +142,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
-    print("Usuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('Usuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
