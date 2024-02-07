@@ -1,23 +1,13 @@
 import requests
-import json
-import urllib3
-import ssl
-from time import sleep
-import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import warnings
+import os
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +41,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -62,29 +53,27 @@ def PostLogIn():
 ################# Atualizar a Custom Platform pelo Id do Managed System ##############################
 def Put_CustomPlatforms():
     
-    system_id = 'id do managed system'
+    managedsystemid = 'id do managed system'
     
     system_json = {
-        'HostName'      : 'string',
-        'PlatformID'    : int
+        'PlatformID': int
     }
     
-    url_managedsystem   = url_cofre + f'/ManagedSystems/{system_id}'
+    url_managedsystem   = url_cofre + f'/ManagedSystems/{managedsystemid}'
     put_managedsystem   = session.put(url = url_managedsystem, data = system_json, verify = False) 
     
     info_system = put_managedsystem.json()
     
-    print(f"Managed System! - Codigo = {put_managedsystem.status_code}\n")
+    print(f'Managed System! - Codigo = {put_managedsystem.status_code}\n')
     
     try:
-        managedsystem_id    = info_system['ManagedSystemID']
         hostname            = info_system['HostName']
         platform_id         = info_system['PlatformID']
         
-        print(f"[+] Sucesso: ManagedSystemID: {managedsystem_id} | HostName: {hostname} | PlatformID: {platform_id}")
+        print(f'[+] Sucesso: HostName: {hostname} | PlatformID: {platform_id} | Status Code = {put_managedsystem.status_code}')
             
     except: 
-        print(f"[-] Erro: {info_system} | Status Code = {put_managedsystem.status_code}")
+        print(f'[-] Erro: {info_system} | Status Code = {put_managedsystem.status_code}')
 #################################################################################################
 
 
@@ -93,7 +82,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
