@@ -1,23 +1,13 @@
 import requests
-import json
-import urllib3
-import ssl
-from time import sleep
-import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import warnings
+import os
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
 ip_cofre       = 'ip do cofre'
 url_cofre      = f'https://{ip_cofre}/BeyondTrust/api/public/v3'
-workgroupName  = "BeyondTrust Workgroup"
+workgroupname  = "BeyondTrust Workgroup"
 ##########################
 
 
@@ -51,10 +41,11 @@ def PostLogIn():
     username    = info_login['UserName']
     name        = info_login['Name']
     
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    os.system('cls')
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
@@ -67,17 +58,17 @@ def Get_Assets():
     
     info_asset = get_asset.json()
     
-    print(f"Assets! - Codigo = {get_asset.status_code}\n")
+    print(f'Assets! - Codigo = {get_asset.status_code}\n')
     
     for row in get_asset.json():
         try:
             asset_id     = row['AssetID']
             assert_name  = row['AssetName']
             
-            print(f"[+] AssetID: {asset_id} | AssetName - {assert_name}")
+            print(f'[+] AssetID: {str(asset_id).ljust(3)} | AssetName - {assert_name}')
             
         except: 
-            print(f"[-] Erro: {info_asset} | Status Code = {get_asset.status_code}")
+            print(f'[-] Erro: {info_asset} | Status Code = {get_asset.status_code}')
 #################################################################################################
 
 
@@ -86,7 +77,7 @@ def PostLogOff():
     
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify = False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
