@@ -1,17 +1,8 @@
-import requests
-import json
-import urllib3
-import ssl
 from time import sleep
+import requests
 import csv
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import warnings
+warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 
 ### Configuração Cofre ###
@@ -69,6 +60,8 @@ def Add_AddressGroup():
     print(f"Address Group - Codigo = {adressgroup.status_code}\n")
     
     for row in adressgroup.json():
+        sleep(1)
+        
         try:
             address_id   = row['AddressGroupID']
             address_name = row['Name']
