@@ -1,7 +1,6 @@
 from time import sleep
 import requests
 import csv
-import os
 import warnings
 warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
@@ -42,29 +41,30 @@ def PostLogIn():
     userid      = info_login['UserId']
     username    = info_login['UserName']
     name        = info_login['Name']
-
-    os.system('cls)
-    print("\nLogin Feito com Sucesso! - Codigo =", login.status_code)
-    print("\nUserId..:", userid, 
-          "\nUserName:", username, 
-          "\nName....:", name)
+    
+    print('\nLogin Feito com Sucesso! - Codigo =', login.status_code)
+    print('\nUserId..:', userid, 
+          '\nUserName:', username, 
+          '\nName....:', name)
     print()
 #########################################################
 
 
-################# Remover Managed System e Asset pelo Id #################################
-def Remove_ManagedSystem_by_ID():
+################# Remover Managed System pelo Id #################################
+def Remove_ManagedSystem_and_Asset_by_ID():
     
     with open(r'caminho do arquivo csv') as csvfile:
         
         reader = csv.DictReader(csvfile)
         
-        sleep(1)
-        
         for row in reader:
-            managedsystem_id = row['ManagedSystemID']
             
-            url_get_managedsystem   = url_cofre + f"/ManagedSystems/{managedsystem_id}"
+            sleep(1)
+            
+            managedsystem_id = row['ManagedSystemID']
+            asset_id         = row['AssetID']
+            
+            url_get_managedsystem   = url_cofre + f'/ManagedSystems/{managedsystem_id}'
             get_managedsystem       = session.get(url = url_get_managedsystem, verify = False)
             
             info_system = get_managedsystem.json()
@@ -73,17 +73,38 @@ def Remove_ManagedSystem_by_ID():
                 hostname = info_system['HostName']
                 
             except:
-                print(f"[-] Erro: {info_system} | Status Code = {get_managedsystem.status_code}")
-                break
+                print(f'[-] Erro: - | Status Code = {get_managedsystem.status_code}')
+                continue
             
-            url_remove_managedsystem    = url_cofre + f"/ManagedSystems/{managedsystem_id}"
+            url_remove_managedsystem    = url_cofre + f'/ManagedSystems/{managedsystem_id}'
             remove_managedsystem        = session.delete(url = url_remove_managedsystem, verify=False)
             
             if (remove_managedsystem.status_code < 399):
-                print(f"[+] {hostname} removido de Managed System com sucesso. | Status Code = {remove_managedsystem.status_code}")
+                print(f'[+] {hostname} removido de Managed System com sucesso. | Status Code = {remove_managedsystem.status_code}')
             
             else:
-                print(f'[-] Erro {hostname}: {remove_managedsystem}')
+                print(f'[-] Erro {hostname}: {remove_managedsystem}') 
+            
+            url_get_asset   = url_cofre + f'/Assets/{asset_id}'
+            get_asset       = session.get(url = url_get_asset, verify=False)
+            
+            
+            try:
+                info_asset = get_asset.json()
+                asset_name = info_asset['AssetName'] 
+                
+            except:
+                print(f'OBS - Assest com o ID {asset_id} já foi removido.')
+                continue
+            
+            url_remove_asset    = url_cofre + f'/Assets/{asset_id}'
+            remove_asset        = session.delete(url = url_remove_asset, verify=False)
+
+            if (remove_asset.status_code < 399):
+                print(f'[+] {asset_name} removido de Asset com sucesso. | Status Code = {remove_asset.status_code}\n')
+            
+            else:
+                print(f'[-] Erro {asset_name}: {remove_asset}')
 ###########################################################################
 
 
@@ -91,14 +112,14 @@ def Remove_ManagedSystem_by_ID():
 def PostLogOff():
     logoff = session.post(url = f'{url_cofre}/Auth/Signout', verify=False)  
 
-    print("\nUsuario acabou de sair da sessao! - Codigo =", logoff.status_code)
+    print('\nUsuario acabou de sair da sessao! - Codigo =', logoff.status_code)
     print()
 ##########################################################
 
 
 def main():
     PostLogIn()
-    Remove_ManagedSystem_by_ID()
+    Remove_ManagedSystem_and_Asset_by_ID()
     PostLogOff()
     
 if __name__ == '__main__':
