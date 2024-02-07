@@ -75,7 +75,7 @@ def Add_AddressGroup():
     addressgroup_id = input("\nDigite o ID do Address Group: ")
     print()
     
-    with open(r'Caminho do arquico csv') as csvfile:
+    with open(r'caminho do arquico csv') as csvfile:
     
         reader = csv.DictReader(csvfile)
     
